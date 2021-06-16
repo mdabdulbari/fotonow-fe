@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+
+import "./App.css";
+import { uploadImage } from "./services/metadata";
 
 function App() {
+  const [fileUploadStatus, setFileUploadStatus] = useState("");
+
+  const onFileUpload = async (e) => {
+    const file = e.target.files[0];
+    setFileUploadStatus("");
+    try {
+      await uploadImage(file);
+      setFileUploadStatus("Success");
+    } catch (e) {
+      setFileUploadStatus("Error");
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        type="file"
+        accept="image/png, image/jpg, image/jpeg"
+        onChange={onFileUpload}
+      />
+      <div>{fileUploadStatus}</div>
     </div>
   );
 }
